@@ -1,5 +1,6 @@
 package model.dao.impl;
 
+import annotations.Query;
 import connections.DatabaseConnection;
 import exceptions.DatabaseException;
 import model.DepartmentEntity;
@@ -10,15 +11,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public final class SellerDaoImpl implements SellerDao {
-
-    private Connection connection;
-
-    public SellerDaoImpl(Connection connection) {
-        this.connection = connection;
-    }
+@SuppressWarnings("all")
+public record SellerDaoImpl(Connection connection) implements SellerDao {
 
     @Override
     public void insert(SellerEntity sellerEntity) {
@@ -41,13 +40,8 @@ public final class SellerDaoImpl implements SellerDao {
         ResultSet resultSet = null;
 
         try {
-            statement = connection.prepareStatement(
-                    """
-                               select seller.*, department.Name as DepName
-                               from seller inner join department
-                               on seller.DepartmentId = department.Id
-                               where seller.Id = ?
-                            """);
+            statement = connection.prepareStatement("select seller.*, department.Name as DepName from seller " +
+                    "inner join department on seller.DepartmentId = department.Id where seller.Id = ?");
 
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
@@ -65,7 +59,50 @@ public final class SellerDaoImpl implements SellerDao {
         }
     }
 
-    private SellerEntity instantiateSeller(ResultSet resultSet, DepartmentEntity department) throws SQLException{
+    @Override
+    public List<SellerEntity> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<SellerEntity> findByDepartment(DepartmentEntity departmentEntity) {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = connection.prepareStatement("" +
+                    "select seller.*, department.Name as DepName " +
+                    "from seller inner join department " +
+                    "on seller.DepartmentId = department.Id " +
+                    "where DepartmentId = ? " +
+                    "order by Name");
+
+            statement.setInt(1, departmentEntity.getId());
+            resultSet = statement.executeQuery();
+
+            List<SellerEntity> sellers = new ArrayList<>();
+            Map<Integer, DepartmentEntity> entityMap = new HashMap<>();
+
+            while (resultSet.next()) {
+
+                DepartmentEntity department = entityMap.get(resultSet.getInt("DepartmentId"));
+
+                if (department == null) {
+                    department = instantiateDepartment(resultSet);
+                    entityMap.put(resultSet.getInt("DepartmentId"), department);
+                }
+                sellers.add(instantiateSeller(resultSet, department));
+            }
+            return sellers;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        } finally {
+            DatabaseConnection.statementClose(statement);
+            DatabaseConnection.resultSetClose(resultSet);
+        }
+    }
+
+    private SellerEntity instantiateSeller(ResultSet resultSet, DepartmentEntity department) throws SQLException {
         SellerEntity seller = new SellerEntity();
         seller.setId(resultSet.getInt("Id"));
         seller.setName(resultSet.getString("Name"));
@@ -76,15 +113,10 @@ public final class SellerDaoImpl implements SellerDao {
         return seller;
     }
 
-    private DepartmentEntity instantiateDepartment(ResultSet resultSet) throws SQLException{
+    private DepartmentEntity instantiateDepartment(ResultSet resultSet) throws SQLException {
         DepartmentEntity department = new DepartmentEntity();
         department.setId(resultSet.getInt("DepartmentId"));
         department.setName(resultSet.getString("DepName"));
         return department;
-    }
-
-    @Override
-    public List<SellerEntity> findAll() {
-        return null;
     }
 }
