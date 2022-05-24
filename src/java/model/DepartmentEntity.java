@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @SuppressWarnings("all")
-public class DepartmentEntity implements Serializable {
+public final class DepartmentEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2958436501723651053L;

@@ -5,7 +5,7 @@ import model.dao.DepartmentDao;
 
 import java.util.List;
 
-public class DepartmentImpl implements DepartmentDao {
+public final class DepartmentImpl implements DepartmentDao {
 
     @Override
     public void insert(DepartmentEntity departmentEntity) {

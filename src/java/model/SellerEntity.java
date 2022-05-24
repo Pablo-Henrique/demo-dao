@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @SuppressWarnings("all")
-public class SellerEntity implements Serializable {
+public final class SellerEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5858441523904310814L;
