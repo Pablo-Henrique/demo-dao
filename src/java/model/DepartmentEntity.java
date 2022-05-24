@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+@SuppressWarnings("all")
 public class DepartmentEntity implements Serializable {
 
     @Serial
@@ -51,8 +52,11 @@ public class DepartmentEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Department{" + "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        final StringBuffer sb;
+        sb = new StringBuffer("{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

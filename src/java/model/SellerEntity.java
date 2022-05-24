@@ -94,11 +94,14 @@ public class SellerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Seller{" + "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", birthDate=" + birthDate +
-                ", baseSalary=" + baseSalary +
-                '}';
+        final StringBuffer sb = new StringBuffer("Seller{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", birthDate=").append(birthDate);
+        sb.append(", baseSalary=").append(baseSalary);
+        sb.append(", department=").append(departmentEntity);
+        sb.append('}');
+        return sb.toString();
     }
 }
