@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Department implements Serializable {
+public class DepartmentEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2958436501723651053L;
@@ -12,12 +12,12 @@ public class Department implements Serializable {
     private Integer id;
     private String name;
 
-    public Department(Integer id, String name) {
+    public DepartmentEntity(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Department() {
+    public DepartmentEntity() {
     }
 
     public Integer getId() {
@@ -40,7 +40,7 @@ public class Department implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Department that = (Department) o;
+        DepartmentEntity that = (DepartmentEntity) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 

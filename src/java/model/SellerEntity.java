@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @SuppressWarnings("all")
-public class Seller implements Serializable {
+public class SellerEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5858441523904310814L;
@@ -17,18 +17,18 @@ public class Seller implements Serializable {
     private Date birthDate;
     private Double baseSalary;
 
-    private Department department;
+    private DepartmentEntity departmentEntity;
 
-    public Seller(Integer id, String name, String email, Date birthDate, Double baseSalary, Department department) {
+    public SellerEntity(Integer id, String name, String email, Date birthDate, Double baseSalary, DepartmentEntity departmentEntity) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.birthDate = birthDate;
         this.baseSalary = baseSalary;
-        this.department = department;
+        this.departmentEntity = departmentEntity;
     }
 
-    public Seller() {
+    public SellerEntity() {
     }
 
     public Integer getId() {
@@ -71,20 +71,20 @@ public class Seller implements Serializable {
         this.baseSalary = baseSalary;
     }
 
-    public Department getDepartment() {
-        return department;
+    public DepartmentEntity getDepartment() {
+        return departmentEntity;
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
+    public void setDepartment(DepartmentEntity departmentEntity) {
+        this.departmentEntity = departmentEntity;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Seller seller = (Seller) o;
-        return Objects.equals(id, seller.id) && Objects.equals(name, seller.name) && Objects.equals(email, seller.email) && Objects.equals(birthDate, seller.birthDate) && Objects.equals(baseSalary, seller.baseSalary);
+        SellerEntity sellerEntity = (SellerEntity) o;
+        return Objects.equals(id, sellerEntity.id) && Objects.equals(name, sellerEntity.name) && Objects.equals(email, sellerEntity.email) && Objects.equals(birthDate, sellerEntity.birthDate) && Objects.equals(baseSalary, sellerEntity.baseSalary);
     }
 
     @Override
