@@ -2,9 +2,10 @@ package model;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
+@SuppressWarnings("all")
 public class Seller implements Serializable {
 
     @Serial
@@ -16,12 +17,15 @@ public class Seller implements Serializable {
     private Date birthDate;
     private Double baseSalary;
 
-    public Seller(Integer id, String name, String email, Date birthDate, Double baseSalary) {
+    private Department department;
+
+    public Seller(Integer id, String name, String email, Date birthDate, Double baseSalary, Department department) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.birthDate = birthDate;
         this.baseSalary = baseSalary;
+        this.department = department;
     }
 
     public Seller() {
@@ -65,6 +69,14 @@ public class Seller implements Serializable {
 
     public void setBaseSalary(Double baseSalary) {
         this.baseSalary = baseSalary;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     @Override
