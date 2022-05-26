@@ -61,7 +61,38 @@ public record SellerDaoImpl(Connection connection) implements SellerDao {
 
     @Override
     public List<SellerEntity> findAll() {
-        return null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = connection.prepareStatement("" +
+                    "select seller.*, department.Name as DepName " +
+                    "from seller inner join department " +
+                    "on seller.DepartmentId = department.Id " +
+                    "order by Name");
+
+            resultSet = statement.executeQuery();
+
+            List<SellerEntity> sellers = new ArrayList<>();
+            Map<Integer, DepartmentEntity> entityMap = new HashMap<>();
+
+            while (resultSet.next()) {
+
+                DepartmentEntity department = entityMap.get(resultSet.getInt("DepartmentId"));
+
+                if (department == null) {
+                    department = instantiateDepartment(resultSet);
+                    entityMap.put(resultSet.getInt("DepartmentId"), department);
+                }
+                sellers.add(instantiateSeller(resultSet, department));
+            }
+            return sellers;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        } finally {
+            DatabaseConnection.statementClose(statement);
+            DatabaseConnection.resultSetClose(resultSet);
+        }
     }
 
     @Override
