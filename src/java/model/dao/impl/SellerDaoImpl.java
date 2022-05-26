@@ -1,16 +1,12 @@
 package model.dao.impl;
 
-import annotations.Query;
 import connections.DatabaseConnection;
 import exceptions.DatabaseException;
 import model.DepartmentEntity;
 import model.SellerEntity;
 import model.dao.SellerDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +17,35 @@ public record SellerDaoImpl(Connection connection) implements SellerDao {
 
     @Override
     public void insert(SellerEntity sellerEntity) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "insert into seller (Name, Email, BirthDate, BaseSalary, DepartmentId)" + "values (?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
 
+            preparedStatement.setString(1, sellerEntity.getName());
+            preparedStatement.setString(2, sellerEntity.getEmail());
+            preparedStatement.setDate(3, new java.sql.Date(sellerEntity.getBirthDate().getTime()));
+            preparedStatement.setDouble(4, sellerEntity.getBaseSalary());
+            preparedStatement.setInt(5, sellerEntity.getDepartment().getId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    int id = resultSet.getInt(1);
+                    sellerEntity.setId(id);
+                }
+                DatabaseConnection.resultSetClose(resultSet);
+            }else {
+                throw new DatabaseException("Unexpected error! No rowns affected");
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }finally {
+            DatabaseConnection.statementClose(preparedStatement);
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import model.SellerEntity;
 import model.dao.SellerDao;
 import model.dao.factory.DaoFactory;
 
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -27,5 +28,9 @@ public class Main {
         List<SellerEntity> findAll = sellerDao.findAll();
         findAll.forEach(System.out::println);
 
+        System.out.println("\n === TEST 4: Seller Insert =====");
+        SellerEntity seller = new SellerEntity(null, "Greg", "Greg@gmail.com", new Date(), 4000.00, department);
+        sellerDao.insert(seller);
+        System.out.println("Inserted! new id =  " + seller.getId());
     }
 }
