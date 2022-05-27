@@ -32,5 +32,12 @@ public class Main {
         SellerEntity seller = new SellerEntity(null, "Greg", "Greg@gmail.com", new Date(), 4000.00, department);
         sellerDao.insert(seller);
         System.out.println("Inserted! new id =  " + seller.getId());
+
+        System.out.println("\n === TEST 5: Seller Update =====");
+        SellerEntity sellerUpdate = sellerDao.findById(1);
+        sellerUpdate.setName("Marta Waine");
+        sellerUpdate.setEmail("Marta@gmail.com");
+        sellerDao.update(sellerUpdate);
+
     }
 }

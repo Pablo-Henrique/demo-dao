@@ -38,19 +38,37 @@ public record SellerDaoImpl(Connection connection) implements SellerDao {
                     sellerEntity.setId(id);
                 }
                 DatabaseConnection.resultSetClose(resultSet);
-            }else {
+            } else {
                 throw new DatabaseException("Unexpected error! No rowns affected");
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
-        }finally {
+        } finally {
             DatabaseConnection.statementClose(preparedStatement);
         }
     }
 
     @Override
     public void update(SellerEntity sellerEntity) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "UPDATE seller set Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " +
+                    "WHERE Id = ?");
 
+            preparedStatement.setString(1, sellerEntity.getName());
+            preparedStatement.setString(2, sellerEntity.getEmail());
+            preparedStatement.setDate(3, new java.sql.Date(sellerEntity.getBirthDate().getTime()));
+            preparedStatement.setDouble(4, sellerEntity.getBaseSalary());
+            preparedStatement.setInt(5, sellerEntity.getDepartment().getId());
+            preparedStatement.setInt(6, sellerEntity.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        } finally {
+            DatabaseConnection.statementClose(preparedStatement);
+        }
     }
 
     @Override
