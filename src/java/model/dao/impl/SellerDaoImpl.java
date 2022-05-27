@@ -73,6 +73,17 @@ public record SellerDaoImpl(Connection connection) implements SellerDao {
 
     @Override
     public void deleteById(Integer id) {
+        PreparedStatement preparedStatement = null;
+
+        try {
+            preparedStatement = connection().prepareStatement("DELETE FROM seller WHERE Id = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }finally {
+            DatabaseConnection.statementClose(preparedStatement);
+        }
 
     }
 
